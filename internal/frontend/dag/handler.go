@@ -227,8 +227,12 @@ func (h *Handler) getList(params dags.ListDagsParams) (*models.ListDagsResponse,
 		if dagStatus.Error != nil {
 			item.Error = swag.String(dagStatus.Error.Error())
 		}
-
-		resp.DAGs = append(resp.DAGs, item)
+		// add check for filtering over search status
+		if params.SearchStatus != nil && *params.SearchStatus == s.StatusText {
+			resp.DAGs = append(resp.DAGs, item)
+		} else if params.SearchStatus == nil {
+			resp.DAGs = append(resp.DAGs, item)
+		}
 	}
 
 	return resp, nil
@@ -608,6 +612,17 @@ func (h *Handler) postAction(
 		h.client.StartAsync(dagStatus.DAG, client.StartOptions{
 			Params: params.Body.Params,
 		})
+		return &models.PostDagActionResponse{}, nil
+
+	case "dequeue":
+		if dagStatus.Status.Status == scheduler.StatusRunning {
+			return nil, newBadRequestError(errInvalidArgs)
+		}
+		if err := h.client.Dequeue(dagStatus.DAG); err != nil {
+			return nil, newBadRequestError(
+				fmt.Errorf("error trying to dequeue the DAG: %w", err),
+			)
+		}
 		return &models.PostDagActionResponse{}, nil
 
 	case "suspend":

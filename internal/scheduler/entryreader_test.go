@@ -109,6 +109,8 @@ func setupTest(t *testing.T) (string, client.Client) {
 	dataStore := dsclient.NewDataStores(
 		cfg.DAGs,
 		cfg.DataDir,
+		cfg.QueueDir,
+		cfg.StatsDir,
 		cfg.SuspendFlagsDir,
 		dsclient.DataStoreOptions{
 			LatestStatusToday: cfg.LatestStatusToday,

@@ -34,6 +34,8 @@ type DataStores interface {
 	HistoryStore() HistoryStore
 	DAGStore() DAGStore
 	FlagStore() FlagStore
+	QueueStore() QueueStore
+	StatsStore() StatsStore
 }
 
 type HistoryStore interface {
@@ -46,6 +48,7 @@ type HistoryStore interface {
 	FindByRequestID(dagFile string, requestID string) (*model.StatusFile, error)
 	RemoveAll(dagFile string) error
 	RemoveOld(dagFile string, retentionDays int) error
+	RemoveEmptyQueue(dagFile string) error
 	Rename(oldName, newName string) error
 }
 
@@ -64,11 +67,27 @@ type DAGStore interface {
 	TagList() ([]string, []string, error)
 }
 
+type QueueStore interface {
+	Create() error
+	Enqueue(d *dag.DAG) error
+	QueueLength() int
+	Dequeue() (*model.Queue, error)
+	FindJobId(dag string) (bool, error)
+}
+
+type StatsStore interface {
+	Create() error
+	IncrementRunningDags(string) error
+	DecrementRunningDags(string) error
+	GetRunningDags() (int, error)
+}
+
 type DAGListPaginationArgs struct {
-	Page  int
-	Limit int
-	Name  *string
-	Tag   *string
+	Page   int
+	Limit  int
+	Name   *string
+	Tag    *string
+	Status *string
 }
 
 type DagListPaginationResult struct {

@@ -69,6 +69,11 @@ func init() {
             "type": "string",
             "name": "searchTag",
             "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "searchStatus",
+            "in": "query"
           }
         ],
         "responses": {
@@ -209,6 +214,7 @@ func init() {
                   "type": "string",
                   "enum": [
                     "start",
+                    "dequeue",
                     "suspend",
                     "stop",
                     "retry",
@@ -302,6 +308,32 @@ func init() {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/searchDagsResponse"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "description": "Returns a list of current status.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "dags"
+        ],
+        "operationId": "listStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/listStatusResponse"
             }
           },
           "default": {
@@ -870,6 +902,27 @@ func init() {
         },
         "PageCount": {
           "type": "integer"
+        }
+      }
+    },
+    "listStatusResponse": {
+      "type": "object",
+      "required": [
+        "Status",
+        "Errors"
+      ],
+      "properties": {
+        "Errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Status": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -1164,6 +1217,11 @@ func init() {
             "type": "string",
             "name": "searchTag",
             "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "searchStatus",
+            "in": "query"
           }
         ],
         "responses": {
@@ -1304,6 +1362,7 @@ func init() {
                   "type": "string",
                   "enum": [
                     "start",
+                    "dequeue",
                     "suspend",
                     "stop",
                     "retry",
@@ -1397,6 +1456,32 @@ func init() {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/searchDagsResponse"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "description": "Returns a list of current status.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "dags"
+        ],
+        "operationId": "listStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/listStatusResponse"
             }
           },
           "default": {
@@ -1965,6 +2050,27 @@ func init() {
         },
         "PageCount": {
           "type": "integer"
+        }
+      }
+    },
+    "listStatusResponse": {
+      "type": "object",
+      "required": [
+        "Status",
+        "Errors"
+      ],
+      "properties": {
+        "Errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Status": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
